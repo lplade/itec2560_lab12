@@ -6,7 +6,14 @@ var userSchema = mongoose.Schema({
 	local : {
 		username : String,
 		password : String
-	}
+	},
+	
+	signUpDate: { type: Date,
+		default: Date.now() },
+	
+	favoriteColor: String,
+	luckyNumber: Number
+	
 });
 
 userSchema.methods.generateHash = function(password) {
