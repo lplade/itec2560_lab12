@@ -1,3 +1,6 @@
 [submodule "simple-auth-fav-color"]
 	path = simple-auth-fav-color
 	url = https://github.com/minneapolis-edu/simple-auth-fav-color
+[submodule "simple-auth-fav-color-twitter-auth"]
+	path = simple-auth-fav-color-twitter-auth
+	url = https://github.com/minneapolis-edu/simple-auth-fav-color-twitter-auth
