@@ -1,0 +1,3 @@
+[submodule "simple-auth-fav-color"]
+	path = simple-auth-fav-color
+	url = https://github.com/minneapolis-edu/simple-auth-fav-color
