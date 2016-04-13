@@ -36,7 +36,7 @@ middleware (if any) to continue chain of request processing. Typically, this wil
 end up with the route handler that use this middleware being called,
 for exapmple GET /secret.
 
-If the user is not logged in, call res.recdirect to send them back to the home page
+If the user is not logged in, call res.redirect to send them back to the home page
 Could also send them to the login or signup pages if you prefer
 res.redirect ends the request handling for this request,
 so the route handle that uses this middleware (in this example, GET /secret) never runs.
@@ -47,5 +47,24 @@ function isLoggedIn(req, res, next) {
 	}
 	res.redirect('/');
 }
+
+/* GET login page */
+router.get('/login', function(req, res, next){
+	res.render('login', { message : req.flash('loginMessage')})
+});
+
+/* POST login - this is called when clicking login butotn
+	Very similar to signup, except using local-login. */
+router.post('/login', passport.authenticate('local-login', {
+	successRedirect: '/secret',
+	failureRedirect: '/login',
+	failureFlash: true
+}));
+
+/* GET logout */
+router.get('/logout', function(req, res, next) {
+	req.logout(); //passport middleware adds these funtions to req.
+	res.redirect('/');
+});
 
 module.exports = router;
