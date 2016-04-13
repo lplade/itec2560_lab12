@@ -1,6 +1,9 @@
 var LocalStrategy = require('passport-local').Strategy;
+var TwitterStrategy = require('passport-twitter').Strategy;
 
 var User = require('../models/user');
+
+var configAuth = require('./auth');
 
 module.exports = function (passport) {
 	//Passport session setup. Need the ability to
@@ -18,7 +21,47 @@ module.exports = function (passport) {
 			done(err, user);
 		})
 	});
+	passport.use(new TwitterStrategy( {
+		consumerKey : configAuth.twitterAuth.consumerKey,
+		consumerSecret : configAuth.twitterAuth.consumerSecret,
+		callbackUrl : configAuth.twitterAuth.callbackURL
+	}, function(token, tokenSecret, profile, done) {
 
+		process.nextTick(function(){
+			console.log('response from twitter');
+			console.log(profile);
+
+			User.findOne({'twitter.id': profile.id}, function(err, user){
+				if (err) {
+					return done(err);
+				}
+
+				//this user already has an account on our site. Return this user.
+				if (user) {
+					return done(null, user);
+				}
+
+				//The user does not have an account with our site yet.
+				//Make a new user and return it.
+				else {
+					var newUser = new User();
+					newUser.twitter = {};
+					newUser.twitter.id = profile.id;
+					newUser.twitter.token = token;
+					newUser.twitter.username = profile.username;
+					newUser.twitter.displayName = profile.displayName;
+
+					newUser.save(function(err){
+						if(err) {
+							throw err;
+						}
+						return done(null, newUser);
+					})
+				}
+			});
+		})
+	}));
+	
 	//Sign up new user
 	passport.use('local-signup', new LocalStrategy({
 		usernameField: 'username',

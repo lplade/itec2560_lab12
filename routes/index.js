@@ -4,9 +4,9 @@ var passport = require('passport');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	//This will probably be the home page for your application
-	//Let's redirect to the signup page
-	res.redirect('/login');
+	//User the home page for your application:
+	// shows a choice of local login or Twitter login
+	res.render('index');
 });
 
 /* GET signup page */
@@ -47,6 +47,13 @@ function isLoggedIn(req, res, next) {
 	}
 	res.redirect('/');
 }
+
+router.get('/auth/twitter', passport.authenticate('twitter'));
+
+router.get('/auth/twitter/callback', passport.authenticate('twitter', {
+	successRedirect: '/secret',
+	failureRedirect: '/'
+}));
 
 /* GET login page */
 router.get('/login', function(req, res, next){
